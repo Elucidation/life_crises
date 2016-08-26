@@ -156,7 +156,7 @@ crises_sorted.sort(function(a, b) {
   <h1>Life crises</h1>
     <!-- Input birthday form -->
   <div>
-    <p>Birthday:<br>
+    <p>Enter your Birthday here:<br>
     <input type="datetime-local" id="bday" value="1990-01-01T00:00"
     onblur="getLifeCrises()" onchange="getLifeCrises()"></p>
     <!-- onblur for mobile, onchange for desktop, yes, it runs twice -->
@@ -164,7 +164,7 @@ crises_sorted.sort(function(a, b) {
   
   <div>
     <!-- Output here -->
-    <p>Here is a list of Life crises based on your birthday:</p>
+    <p>Life crises dates will update on changes:</p>
     <table id='crises'></p>
   </div>
   
