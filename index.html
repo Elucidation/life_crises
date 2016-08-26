@@ -81,19 +81,14 @@ function getLifeCrises() {
   var crises_table = document.getElementById("crises");
 
   // Clear out previous elements in list
-  while(crises_table.rows.length > 0) {
-  crises_table.deleteRow(0);
-}
+  while(crises_table.rows.length > 1) {
+    crises_table.deleteRow(1);
+  }
 
-  // Add headers
-  var header = crises_table.createTHead();
-  var row = header.insertRow(0);
-  var cell_name = row.insertCell(0);
-  var cell_date = row.insertCell(1);
-  var due_date = row.insertCell(2);
-  cell_name.innerHTML = "<b>Life Crisis Event</b>";
-  cell_date.innerHTML = "<b>Date of Event</b>";
-  due_date.innerHTML = "<b>Time till Event</b>";
+  // Skip generating entries with a NaN birthday date
+  if (isNaN(bday)) {
+    return;
+  }
 
   // Update list with crises
   for (var i = 0; i < crises_sorted.length; i++) {
@@ -171,7 +166,14 @@ crises_sorted.sort(function(a, b) {
   <div>
     <!-- Output here -->
     <p>Crisis dates will update on changes:</p>
-    <table id='crises' class="mdl-data-table mdl-js-data-table"></table></p>
+    <table class="mdl-data-table mdl-js-data-table">
+    <thead><tr>
+      <td><b>Life Crisis Event</b></td>
+      <td><b>Date of Event</b></td>
+      <td><b>Time till Event</b></td>
+    </tr></thead>
+    <tbody id='crises'></tbody>
+    </table>
   </div>
 </div>
 
