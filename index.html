@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Life Crises</title>
+
+<script>
+
+function zeroPad(aNumber) {
+  return ("0"+aNumber).slice(-2);
+}
+function humanTime(timeStamp) {
+  var M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var D = new Date(timeStamp); // 23 Aug 2016 16:45:59 <-- Desired format.
+  return D.getDate() + " " + M[D.getMonth()] + " " + D.getFullYear() + " " + D.getHours() + ":" + zeroPad(D.getMinutes()) + ":" + zeroPad(D.getSeconds());
+}
+
+function getTimeDelta(delta_ms) {
+  // Turn input milliseconds into years, days, hours, minutes, seconds (0 values are not printed)
+  // Example: 1 year, 3 days, 2 hours, 4 minutes, 1 seconds
+  // Example: 3 days, 4 minutes
+  // Very inefficient way of calculating year/mon/day/hour/min/second offsets
+  var s_min = 60;
+  var s_hour = s_min*60;
+  var s_day = s_hour*24;
+  var s_year = s_day*365.25;
+  console.log(s_min, s_hour, s_day, s_year)
+
+  var s = delta_ms / 1000; // seconds
+
+  var diffY = Math.floor(s / s_year);
+  s -= diffY * s_year;
+
+  var diffD = Math.floor(s / s_day);
+  s -= diffD * s_day;
+
+  var diffH = Math.floor(s / s_hour);
+  s -= diffH * s_hour;
+
+  var diffM = Math.floor(s / s_min);
+  s -= diffM * s_min;
+
+  diffS = s;
+
+  return [diffY, diffD, diffH, diffM, diffS];
+}
+
+function getPrettyTimeDelta(delta_ms) {
+  var delta = getTimeDelta(delta_ms);
+  if (delta[0] < 0) {
+    return 'Passed ' + -delta[0] + ' years ago';
+  }
+
+  msg = ''
+  if (delta[0] != 0) {
+    msg += delta[0] + ' years';
+  }
+  if (delta[1] != 0) {
+    msg += ', ' + delta[1] + ' days';
+  }
+  if (delta[2] != 0) {
+    msg += ', ' + delta[2] + ' hours';
+  }
+  if (delta[3] != 0) {
+    msg += ', ' + delta[3] + ' min';
+  }
+  if (delta[4] != 0) {
+    msg += ', ' + delta[4].toFixed(2) + ' seconds';
+  }
+  return msg;
+}
+
+function getLifeCrises() {
+  var today = new Date(); // Today
+  var bday_val = document.getElementById("bday").value;
+  var bday = new Date(bday_val.replace(/-/g,'/').replace('T',' ')); // Use local timezone
+  var crises_table = document.getElementById("crises");
+
+  // Clear out previous elements in list
+  while(crises_table.rows.length > 0) {
+  crises_table.deleteRow(0);
+}
+
+  // Add headers
+  var header = crises_table.createTHead();
+  var row = header.insertRow(0);
+  var cell_name = row.insertCell(0);
+  var cell_date = row.insertCell(1);
+  var due_date = row.insertCell(2);
+  cell_name.innerHTML = "<b>Life Crisis Event</b>";
+  cell_date.innerHTML = "<b>Date of Event</b>";
+  due_date.innerHTML = "<b>Time till Event</b>";
+
+  // Update list with crises
+  for (key in crises) {
+    var row = crises_table.insertRow();
+    var cell_name = row.insertCell(0);
+    var cell_date = row.insertCell(1);
+    var due_date = row.insertCell(2);
+
+    var crisis_date = new Date(bday.getTime() + crises[key]*lifespan);
+
+    var ms_till_crisis_date = crisis_date - today;
+
+    cell_name.innerText = key + '-life crisis';
+    cell_date.innerText = humanTime(crisis_date);
+    due_date.innerText = getPrettyTimeDelta(ms_till_crisis_date);
+  }
+
+
+
+  var diffMS = today - bday;
+}
+
+// Set up crises points
+var lifespan = 100.0 * (365.25 * 24 * 60 * 60 * 1000) ; // in ms
+var crises = {};
+
+crises['Quarter'] = 0.25;
+crises['Mid'] = 0.5;
+crises['Three quarters'] = 0.75;
+
+crises['Third'] = 1./3;
+crises['Two thirds'] = 2./3;
+
+crises['Fifth'] = 1./5;
+crises['Two fifths'] = 2./5;
+crises['Three fifths'] = 3./5;
+crises['Four fifths'] = 4./5;
+
+crises['Five sixths'] = 5./6;
+
+crises['Seventh'] = 1./7;
+crises['Two sevenths'] = 2./7;
+crises['Three sevenths'] = 3./7;
+crises['Four sevenths'] = 4./7;
+crises['Five sevenths'] = 5./7;
+crises['Six sevenths'] = 6./7;
+// for (key in crises) { console.log(key, crises[key]); }
+</script>
+
+</head>
+
+<body onload="getLifeCrises()">
+  <h1>Life crises</h1>
+    <!-- Input birthday form -->
+  <div>
+    <p>Birthday:<br>
+    <input type="datetime-local" id="bday" value="1988-04-24T00:00"
+    onchange="getLifeCrises()"></p>
+  </div>
+  
+  <div>
+    <!-- Output here -->
+    <p>Here is a list of Life crises based on your birthday:</p>
+    <table id='crises'></p>
+  </div>
+  
+
+</body>
+</html>
