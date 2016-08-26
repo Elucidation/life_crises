@@ -1,5 +1,7 @@
 # Life crises!
 
+### [Try it out live here!](http://elucidation.github.io/life_crises)
+
 Given your birthday (hard-coded for now) and assuming a 100 year lifespan, this will
 print out several of your common life crises (like mid-life crisis, quarter-life crisis), and then several uncommon ones.
 
