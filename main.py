@@ -36,8 +36,13 @@ crises['six sevenths'] = 6./7
 
 # Iterate through list by earliest to latest
 print("\nList of your Life crises:")
+today = timezone('US/Pacific').localize(datetime.now())
 for (name,val) in sorted(crises.items(), key=lambda k: k[1]):
   # print(key,val)
   crisis_date = birthday + timedelta(days=val*lifespan*365.25)
-  print("%s-life crisis: %s" % 
-    (name, crisis_date.strftime("%b %d, %Y %H:%M:%S")))
+  due_date = crisis_date - today
+  if due_date.days < 0:
+    due_date = "passed"
+  print("%s-life crisis: %s, this is happening in %s" % 
+    (name, crisis_date.strftime("%b %d, %Y %H:%M:%S"),
+      due_date))
