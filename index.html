@@ -91,23 +91,23 @@ function getLifeCrises() {
   due_date.innerHTML = "<b>Time till Event</b>";
 
   // Update list with crises
-  for (key in crises) {
+  for (var i = 0; i < crises_sorted.length; i++) {
+    var crises_name = crises_sorted[i][0];
+    var crises_percent = crises_sorted[i][1];
+
     var row = crises_table.insertRow();
     var cell_name = row.insertCell(0);
     var cell_date = row.insertCell(1);
     var due_date = row.insertCell(2);
 
-    var crisis_date = new Date(bday.getTime() + crises[key]*lifespan);
+    var crisis_date = new Date(bday.getTime() + crises_percent*lifespan);
 
     var ms_till_crisis_date = crisis_date - today;
 
-    cell_name.innerText = key + '-life crisis';
+    cell_name.innerText = crises_name + '-life crisis';
     cell_date.innerText = humanTime(crisis_date);
     due_date.innerText = getPrettyTimeDelta(ms_till_crisis_date);
   }
-
-
-
   var diffMS = today - bday;
 }
 
@@ -135,7 +135,19 @@ crises['Three sevenths'] = 3./7;
 crises['Four sevenths'] = 4./7;
 crises['Five sevenths'] = 5./7;
 crises['Six sevenths'] = 6./7;
-// for (key in crises) { console.log(key, crises[key]); }
+
+// Sort the dictionary
+var crises_sorted = [];
+
+for (var key in crises) crises_sorted.push([key, crises[key]]);
+
+crises_sorted.sort(function(a, b) {
+    a = a[1];
+    b = b[1];
+
+    return a < b ? -1 : (a > b ? 1 : 0);
+});
+
 </script>
 
 </head>
@@ -146,7 +158,8 @@ crises['Six sevenths'] = 6./7;
   <div>
     <p>Birthday:<br>
     <input type="datetime-local" id="bday" value="1990-01-01T00:00"
-    onblur="getLifeCrises()"></p>
+    onblur="getLifeCrises()" onchange="getLifeCrises()"></p>
+    <!-- onblur for mobile, onchange for desktop, yes, it runs twice -->
   </div>
   
   <div>
