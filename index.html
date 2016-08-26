@@ -81,8 +81,8 @@ function getLifeCrises() {
   var crises_table = document.getElementById("crises");
 
   // Clear out previous elements in list
-  while(crises_table.rows.length > 1) {
-    crises_table.deleteRow(1);
+  while(crises_table.rows.length > 0) {
+    crises_table.deleteRow(0);
   }
 
   // Skip generating entries with a NaN birthday date
