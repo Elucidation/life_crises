@@ -18,13 +18,12 @@ function humanTime(timeStamp) {
 function getTimeDelta(delta_ms) {
   // Turn input milliseconds into years, days, hours, minutes, seconds (0 values are not printed)
   // Example: 1 year, 3 days, 2 hours, 4 minutes, 1 seconds
-  // Example: 3 days, 4 minutes
+  // Example: 3 days, 4 minutes, 
   // Very inefficient way of calculating year/mon/day/hour/min/second offsets
   var s_min = 60;
   var s_hour = s_min*60;
   var s_day = s_hour*24;
   var s_year = s_day*365.25;
-  console.log(s_min, s_hour, s_day, s_year)
 
   var s = delta_ms / 1000; // seconds
 
@@ -53,19 +52,19 @@ function getPrettyTimeDelta(delta_ms) {
 
   msg = ''
   if (delta[0] != 0) {
-    msg += delta[0] + ' years';
+    msg += delta[0] + ' years, ';
   }
   if (delta[1] != 0) {
-    msg += ', ' + delta[1] + ' days';
+    msg += delta[1] + ' days, ';
   }
   if (delta[2] != 0) {
-    msg += ', ' + delta[2] + ' hours';
+    msg += delta[2] + ' hours, ';
   }
   if (delta[3] != 0) {
-    msg += ', ' + delta[3] + ' min';
+    msg += delta[3] + ' min, ';
   }
   if (delta[4] != 0) {
-    msg += ', ' + delta[4].toFixed(2) + ' seconds';
+    msg += delta[4].toFixed(2) + ' seconds';
   }
   return msg;
 }
@@ -146,8 +145,8 @@ crises['Six sevenths'] = 6./7;
     <!-- Input birthday form -->
   <div>
     <p>Birthday:<br>
-    <input type="datetime-local" id="bday" value="1988-04-24T00:00"
-    onchange="getLifeCrises()"></p>
+    <input type="datetime-local" id="bday" value="1990-01-01T00:00"
+    onblur="getLifeCrises()"></p>
   </div>
   
   <div>
