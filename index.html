@@ -69,16 +69,18 @@ function getPrettyTimeDelta(delta_ms) {
     msg += delta[3] + ' min, ';
   }
   if (delta[4] != 0) {
-    msg += delta[4].toFixed(2) + ' seconds';
+    msg += delta[4].toFixed(0) + ' seconds';
   }
   return msg;
 }
 
 function getLifeCrises() {
+  // Just build a new table every time
   var today = new Date(); // Today
   var bday_val = document.getElementById("bday").value;
   var bday = new Date(bday_val.replace(/-/g,'/').replace('T',' ')); // Use local timezone
   var crises_table = document.getElementById("crises");
+  var lifespan = 100.0 * (365.25 * 24 * 60 * 60 * 1000) ; // in ms
 
   // Clear out previous elements in list
   while(crises_table.rows.length > 0) {
@@ -99,6 +101,7 @@ function getLifeCrises() {
     var cell_name = row.insertCell(0);
     var cell_date = row.insertCell(1);
     var due_date = row.insertCell(2);
+    due_date.id = "due"+i; // so updateTimeTillEntries can find these
 
     var crisis_date = new Date(bday.getTime() + crises_percent*lifespan);
 
@@ -106,53 +109,87 @@ function getLifeCrises() {
 
     cell_name.innerText = crises_name + '-life crisis';
     cell_date.innerText = humanTime(crisis_date);
+
     due_date.innerText = getPrettyTimeDelta(ms_till_crisis_date);
-  }
-  var diffMS = today - bday;
+  }  
 }
 
-// Set up crises points
-var lifespan = 100.0 * (365.25 * 24 * 60 * 60 * 1000) ; // in ms
-var crises = {};
+function updateTimeTillEntries() {
+  // Update time till timestamps only
+  var today = new Date(); // Today
+  var bday_val = document.getElementById("bday").value;
+  var bday = new Date(bday_val.replace(/-/g,'/').replace('T',' ')); // Use local timezone
+  var lifespan = 100.0 * (365.25 * 24 * 60 * 60 * 1000) ; // in ms
 
-crises['Quarter'] = 0.25;
-crises['Mid'] = 0.5;
-crises['Three quarters'] = 0.75;
+  // Skip generating entries with a NaN birthday date
+  if (isNaN(bday)) {
+    return;
+  }
 
-crises['Third'] = 1./3;
-crises['Two thirds'] = 2./3;
+  for (var i = 0; i < crises_sorted.length; i++) {
+    var due_date = document.getElementById("due"+i);
 
-crises['Fifth'] = 1./5;
-crises['Two fifths'] = 2./5;
-crises['Three fifths'] = 3./5;
-crises['Four fifths'] = 4./5;
+    // Calculate time delta till date
+    var crises_percent = crises_sorted[i][1];
+    var crisis_date = new Date(bday.getTime() + crises_percent*lifespan);
+    var ms_till_crisis_date = crisis_date - today;
 
-crises['Five sixths'] = 5./6;
+    // Update cell text
+    due_date.innerText = getPrettyTimeDelta(ms_till_crisis_date);
+  }
+}
 
-crises['Seventh'] = 1./7;
-crises['Two sevenths'] = 2./7;
-crises['Three sevenths'] = 3./7;
-crises['Four sevenths'] = 4./7;
-crises['Five sevenths'] = 5./7;
-crises['Six sevenths'] = 6./7;
-
-// Sort the dictionary
+// Global crises
 var crises_sorted = [];
+function setUpCrises() {
+  var crises = {};
+  // Set up crises dictionary
+  crises['Quarter'] = 0.25;
+  crises['Mid'] = 0.5;
+  crises['Three quarters'] = 0.75;
 
-for (var key in crises) crises_sorted.push([key, crises[key]]);
+  crises['Third'] = 1./3;
+  crises['Two thirds'] = 2./3;
 
-crises_sorted.sort(function(a, b) {
-    a = a[1];
-    b = b[1];
+  crises['Fifth'] = 1./5;
+  crises['Two fifths'] = 2./5;
+  crises['Three fifths'] = 3./5;
+  crises['Four fifths'] = 4./5;
 
-    return a < b ? -1 : (a > b ? 1 : 0);
-});
+  crises['Five sixths'] = 5./6;
+
+  crises['Seventh'] = 1./7;
+  crises['Two sevenths'] = 2./7;
+  crises['Three sevenths'] = 3./7;
+  crises['Four sevenths'] = 4./7;
+  crises['Five sevenths'] = 5./7;
+  crises['Six sevenths'] = 6./7;
+
+  // Sort the dictionary by timestamp
+  
+
+  for (var key in crises) crises_sorted.push([key, crises[key]]);
+
+  crises_sorted.sort(function(a, b) {
+      a = a[1];
+      b = b[1];
+
+      return a < b ? -1 : (a > b ? 1 : 0);
+  });
+
+  // Update life crises values
+  getLifeCrises();
+
+  setInterval(function() {
+    updateTimeTillEntries();
+  }, 1000);
+}
 
 </script>
 
 </head>
 
-<body onload="getLifeCrises()">
+<body onload="setUpCrises()">
 <div align="center">
   <h1>Life crises</h1>
     <!-- Input birthday form -->
