@@ -177,6 +177,9 @@ function setUpCrises() {
       return a < b ? -1 : (a > b ? 1 : 0);
   });
 
+  // Check for URL param
+  checkPassedURLParam();
+
   // Update life crises values
   getLifeCrises();
 
@@ -184,6 +187,19 @@ function setUpCrises() {
     updateTimeTillEntries();
   }, 1000);
 }
+
+function checkPassedURLParam() {
+  // Check if URL parameter date of birth was passed, and if so
+  // Set our initial dob to that.
+  if (window.location.search.startsWith('?dob=')) {
+   var dob = new Date(window.location.search.substring(5));
+   if (!isNaN(dob.valueOf())) {
+    // Valid date passed in URL param, update form
+    document.getElementById("bday").value = window.location.search.substring(5);
+   }
+  }
+}
+
 
 </script>
 
