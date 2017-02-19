@@ -188,14 +188,23 @@ function setUpCrises() {
   }, 1000);
 }
 
+function simpleDateString(_date) {
+  return (_date.getFullYear() + "-" + zeroPad(_date.getMonth()+1) + "-" + 
+    _date.getDate() + "T" +zeroPad(_date.getHours()) + ":" +
+    zeroPad(_date.getMinutes()) + ":" + zeroPad(_date.getSeconds()));
+}
+
 function checkPassedURLParam() {
   // Check if URL parameter date of birth was passed, and if so
   // Set our initial dob to that.
   if (window.location.search.startsWith('?dob=')) {
    var dob = new Date(window.location.search.substring(5));
+   dob = new Date(dob.getTime() + dob.getTimezoneOffset()*60000); // Remove timezone offset
+   console.log(dob)
+
    if (!isNaN(dob.valueOf())) {
     // Valid date passed in URL param, update form
-    document.getElementById("bday").value = window.location.search.substring(5);
+    document.getElementById("bday").value = simpleDateString(dob);
    }
   }
 }
@@ -229,6 +238,7 @@ function checkPassedURLParam() {
     </table>
   </div>
 </div>
+
 
 </body>
 </html>
