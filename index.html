@@ -195,7 +195,7 @@ function setUpCrises() {
 
 function simpleDateString(_date) {
   return (_date.getFullYear() + "-" + zeroPad(_date.getMonth()+1) + "-" + 
-    _date.getDate() + "T" +zeroPad(_date.getHours()) + ":" +
+    zeroPad(_date.getDate()) + "T" +zeroPad(_date.getHours()) + ":" +
     zeroPad(_date.getMinutes()) + ":" + zeroPad(_date.getSeconds()));
 }
 
