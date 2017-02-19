@@ -111,7 +111,12 @@ function getLifeCrises() {
     cell_date.innerText = humanTime(crisis_date);
 
     due_date.innerText = getPrettyTimeDelta(ms_till_crisis_date);
-  }  
+  }
+
+  // Quiet update URL param
+  var bday_val = document.getElementById("bday").value;
+  var bday = new Date(bday_val.replace(/-/g,'/').replace('T',' ')); // Use local timezone
+  history.replaceState('', '', '?dob='+simpleDateString(bday));
 }
 
 function updateTimeTillEntries() {
@@ -236,6 +241,10 @@ function checkPassedURLParam() {
     </tr></thead>
     <tbody id='crises'></tbody>
     </table>
+  </div>
+
+  <div>
+    <p><a href="../">Home</a> - <a href="https://github.com/Elucidation/life_crises">Github</a></p>
   </div>
 </div>
 
