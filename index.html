@@ -22,6 +22,7 @@ function humanTime(timeStamp) {
 
 function getTimeDelta(delta_ms) {
   // Turn input milliseconds into years, days, hours, minutes, seconds (0 values are not printed)
+  // Returns the absolute delta, regardless of negative/positive input.
   // Example: 1 year, 3 days, 2 hours, 4 minutes, 1 seconds
   // Example: 3 days, 4 minutes, 
   // Very inefficient way of calculating year/mon/day/hour/min/second offsets
@@ -30,7 +31,7 @@ function getTimeDelta(delta_ms) {
   var s_day = s_hour*24;
   var s_year = s_day*365.25;
 
-  // Get absolute delta, then negate all partials at the end.
+  // Use absolute delta, even if negative.
   var s = Math.abs(delta_ms) / 1000; // seconds    
 
   // TODO : Handle periods between -1 year and 0 seconds ago correctly.
@@ -48,19 +49,12 @@ function getTimeDelta(delta_ms) {
 
   diffS = s;
   
-  // If the delta was negative, return the negated differences.
-  if (delta_ms < 0) {
-    return [-diffY, -diffD, -diffH, -diffM, -diffS];
-  }
   return [diffY, diffD, diffH, diffM, diffS];
 }
 
 function getPrettyTimeDelta(delta_ms) {
   var delta = getTimeDelta(delta_ms);
-  var has_passed = false;
-  if (delta_ms < 0) {
-    has_passed = true;
-  }
+  var has_passed = delta_ms < 0;
   
   parts = []
   if (delta[0] != 0) {
