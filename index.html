@@ -124,7 +124,9 @@ function getLifeCrises() {
   // Quiet update URL param
   var bday_val = document.getElementById("bday").value;
   var bday = new Date(bday_val.replace(/-/g,'/').replace('T',' ')); // Use local timezone
-  history.replaceState('', '', '?dob='+bday.toISOString());
+  // strip seconds from ISO String: '1900-01-23T03:45:00.000Z' -> '1900-01-23T03:45Z'
+  var bday_url_str = bday.toISOString().substr(0,16) + 'Z';
+  history.replaceState('', '', '?dob='+bday_url_str);
 }
 
 function updateTimeTillEntries() {
