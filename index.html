@@ -124,7 +124,7 @@ function getLifeCrises() {
   // Quiet update URL param
   var bday_val = document.getElementById("bday").value;
   var bday = new Date(bday_val.replace(/-/g,'/').replace('T',' ')); // Use local timezone
-  history.replaceState('', '', '?dob='+simpleDateString(bday));
+  history.replaceState('', '', '?dob='+bday.toISOString());
 }
 
 function updateTimeTillEntries() {
@@ -201,6 +201,7 @@ function setUpCrises() {
   }, 1000);
 }
 
+// TODO : Remove unused
 function simpleDateString(_date) {
   return (_date.getFullYear() + "-" + zeroPad(_date.getMonth()+1) + "-" + 
     zeroPad(_date.getDate()) + "T" +zeroPad(_date.getHours()) + ":" +
@@ -212,12 +213,12 @@ function checkPassedURLParam() {
   // Set our initial dob to that.
   if (window.location.search.startsWith('?dob=')) {
    var dob = new Date(window.location.search.substring(5));
-   dob = new Date(dob.getTime() + dob.getTimezoneOffset()*60000); // Remove timezone offset
+   dob = new Date(dob.getTime());
    console.log(dob)
 
    if (!isNaN(dob.valueOf())) {
     // Valid date passed in URL param, update form
-    document.getElementById("bday").value = simpleDateString(dob);
+    document.getElementById("bday").value = dob.toISOString().substring(0,16);
    }
   }
 }
