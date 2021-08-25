@@ -20,7 +20,7 @@ function humanTime(timeStamp) {
   return D.getDate() + " " + M[D.getMonth()] + " " + D.getFullYear() + " " + D.getHours() + ":" + zeroPad(D.getMinutes()) + ":" + zeroPad(D.getSeconds());
 }
 
-function getTimeDelta(delta_ms) {
+function getAbsTimeDelta(delta_ms) {
   // Turn input milliseconds into years, days, hours, minutes, seconds (0 values are not printed)
   // Returns the absolute delta, regardless of negative/positive input.
   // Example: 1 year, 3 days, 2 hours, 4 minutes, 1 seconds
@@ -53,8 +53,8 @@ function getTimeDelta(delta_ms) {
 }
 
 function getPrettyTimeDelta(delta_ms) {
-  var delta = getTimeDelta(delta_ms);
   var has_passed = delta_ms < 0;
+  var delta = getAbsTimeDelta(delta_ms);
   
   parts = []
   if (delta[0] != 0) {
