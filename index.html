@@ -61,25 +61,29 @@ function getPrettyTimeDelta(delta_ms) {
   if (delta_ms < 0) {
     has_passed = true;
   }
-
-  msg = ''
+  
+  parts = []
   if (delta[0] != 0) {
-    msg += delta[0] + ' years, ';
+    parts.push(delta[0] + ' years');
   }
   if (delta[1] != 0) {
-    msg += delta[1] + ' days, ';
+    parts.push(delta[1] + ' days');
   }
   if (delta[2] != 0 && delta[0] == 0) {
-    msg += delta[2] + ' hours, ';
+    parts.push(delta[2] + ' hours');
   }
   if (delta[3] != 0 && delta[0] == 0 && delta[1] == 0) {
-    msg += delta[3] + ' min, ';
+    parts.push(delta[3] + ' min');
   }
   if (delta[4] != 0 && delta[0] == 0 && delta[1] == 0) {
-    msg += delta[4].toFixed(0) + ' seconds';
+    parts.push(delta[4].toFixed(0) + ' seconds');
   }
+  msg = parts.join(', ');
   if (has_passed) {
-    msg = 'Passed ' + msg + ' ago'
+    msg = 'Passed ' + msg + ' ago';
+  }
+  else {
+    msg = msg + ' to go;
   }
   return msg;
 }
