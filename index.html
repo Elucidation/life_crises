@@ -66,10 +66,10 @@ function getPrettyTimeDelta(delta_ms) {
   if (delta[2] != 0 && delta[0] == 0) {
     parts.push(delta[2] + ' hours');
   }
-  if (delta[3] != 0 && delta[0] == 0 && delta[1] == 0) {
+  if (delta[3] != 0) {
     parts.push(delta[3] + ' min');
   }
-  if (delta[4] != 0 && delta[0] == 0 && delta[1] == 0) {
+  if (delta[4] != 0) {
     parts.push(delta[4].toFixed(0) + ' seconds');
   }
   msg = parts.join(', ');
