@@ -30,7 +30,8 @@ function getTimeDelta(delta_ms) {
   var s_day = s_hour*24;
   var s_year = s_day*365.25;
 
-  var s = delta_ms / 1000; // seconds
+  // Get absolute delta, then negate all partials at the end.
+  var s = Math.abs(delta_ms) / 1000; // seconds    
 
   // TODO : Handle periods between -1 year and 0 seconds ago correctly.
   var diffY = Math.floor(s / s_year);
@@ -46,14 +47,18 @@ function getTimeDelta(delta_ms) {
   s -= diffM * s_min;
 
   diffS = s;
-
+  
+  // If the delta was negative, return the negated differences.
+  if (delta_ms < 0) {
+    return [-diffY, -diffD, -diffH, -diffM, -diffS];
+  }
   return [diffY, diffD, diffH, diffM, diffS];
 }
 
 function getPrettyTimeDelta(delta_ms) {
   var delta = getTimeDelta(delta_ms);
   var has_passed = false;
-  if (delta[0] < 0) {
+  if (delta_ms < 0) {
     has_passed = true;
   }
 
@@ -64,13 +69,13 @@ function getPrettyTimeDelta(delta_ms) {
   if (delta[1] != 0) {
     msg += delta[1] + ' days, ';
   }
-  if (delta[2] != 0) {
+  if (delta[2] != 0 && delta[0] == 0) {
     msg += delta[2] + ' hours, ';
   }
-  if (delta[3] != 0) {
+  if (delta[3] != 0 && delta[0] == 0 && delta[1] == 0) {
     msg += delta[3] + ' min, ';
   }
-  if (delta[4] != 0) {
+  if (delta[4] != 0 && delta[0] == 0 && delta[1] == 0) {
     msg += delta[4].toFixed(0) + ' seconds';
   }
   if (has_passed) {
