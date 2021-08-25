@@ -59,9 +59,20 @@ function getPrettyTimeDelta(delta_ms) {
   parts = []
   if (delta[0] != 0) {
     parts.push(delta[0] + ' years');
+    if (has_passed) {
+      // Remove hours/min/sec if > 1 year in the past
+      delta[2] = 0;
+      delta[3] = 0;
+      delta[4] = 0;
+    }
   }
   if (delta[1] != 0) {
     parts.push(delta[1] + ' days');
+    if (has_passed) {
+      // Remove min/sec if > 1 day in the past
+      delta[3] = 0;
+      delta[4] = 0;
+    }
   }
   if (delta[2] != 0) {
     parts.push(delta[2] + ' hours');
@@ -77,7 +88,7 @@ function getPrettyTimeDelta(delta_ms) {
     msg = 'Passed ' + msg + ' ago';
   }
   else {
-    msg += ' to go';
+    msg += ' left';
   }
   return msg;
 }
