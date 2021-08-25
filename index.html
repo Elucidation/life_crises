@@ -32,6 +32,7 @@ function getTimeDelta(delta_ms) {
 
   var s = delta_ms / 1000; // seconds
 
+  // TODO : Handle periods between -1 year and 0 seconds ago correctly.
   var diffY = Math.floor(s / s_year);
   s -= diffY * s_year;
 
@@ -51,8 +52,9 @@ function getTimeDelta(delta_ms) {
 
 function getPrettyTimeDelta(delta_ms) {
   var delta = getTimeDelta(delta_ms);
+  var has_passed = false;
   if (delta[0] < 0) {
-    return 'Passed ' + -delta[0] + ' years ago';
+    has_passed = true;
   }
 
   msg = ''
@@ -70,6 +72,9 @@ function getPrettyTimeDelta(delta_ms) {
   }
   if (delta[4] != 0) {
     msg += delta[4].toFixed(0) + ' seconds';
+  }
+  if (has_passed) {
+    msg = 'Passed ' + msg + ' ago'
   }
   return msg;
 }
