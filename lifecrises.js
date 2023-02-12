@@ -147,7 +147,7 @@ function getLifeCrises() {
     var bday = new Date(bday_val.replace(/-/g, '/').replace('T', ' ')); // Use local timezone
     // strip seconds from ISO String: '1900-01-23T03:45:00.000Z' -> '1900-01-23T03:45Z'
     var bday_url_str = bday.toISOString().substr(0, 16) + 'Z';
-    history.replaceState('', '', '?dob=' + bday_url_str);
+    history.replaceState('', '', `?s=${sex_id}&dob=${bday_url_str}`);
 }
 
 function updateTimeTillEntries() {
@@ -236,13 +236,25 @@ function simpleDateString(_date) {
 function checkPassedURLParam() {
     // Check if URL parameter date of birth was passed, and if so
     // Set our initial dob to that.
-    if (window.location.search.startsWith('?dob=')) {
-        var dob = new Date(window.location.search.substring(5));
+    const urlParams = new URLSearchParams(window.location.search);
+    var dob_param = urlParams.get("dob");
+
+    if (dob_param != null) {
+        var dob = new Date(dob_param);
         console.log(dob)
 
         if (!isNaN(dob.valueOf())) {
             // Valid date passed in URL param, update form
             document.getElementById("bday").value = simpleDateString(dob);
+        }
+    }
+
+    var sex_param = urlParams.get("s");
+    if (sex_param != null) {
+        // male by default, so change if female
+        if ((sex_param == "1") || (sex_param == "f") || (sex_param == "female")) {
+            var sex_sel = document.getElementById("sex");
+            sex_sel.selectedIndex = 1;
         }
     }
 }
