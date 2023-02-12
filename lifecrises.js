@@ -109,7 +109,7 @@ function getLifeCrises() {
 
     // var lifespan_ms = lifespan_years * (365.25 * 24 * 60 * 60 * 1000); // in ms
     var lifespan_element = document.getElementById("lifespan")
-    lifespan_element.textContent = `${age_years.toFixed(0)} year old ${sex_sel.options[sex_sel.selectedIndex].text}: ~${lifespan_years.toFixed(1)} years`;
+    lifespan_element.textContent = `${age_years.toFixed(1)} year old ${sex_sel.options[sex_sel.selectedIndex].text}: ~${lifespan_years.toFixed(1)} years`;
 
     // Clear out previous elements in list
     while (crises_table.rows.length > 0) {
