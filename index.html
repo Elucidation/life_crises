@@ -1,273 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>Life Crises</title>
+  <meta charset="UTF-8">
+  <title>Life Crises</title>
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<link rel="stylesheet" href="https://code.getmdl.io/1.2.0/material.indigo-pink.min.css">
-<script defer src="https://code.getmdl.io/1.2.0/material.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<script>
-
-function zeroPad(aNumber) {
-  return ("0"+aNumber).slice(-2);
-}
-function humanTime(timeStamp) {
-  var M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  var D = new Date(timeStamp); // 23 Aug 2016 16:45:59 <-- Desired format.
-  return D.getDate() + " " + M[D.getMonth()] + " " + D.getFullYear() + " " + D.getHours() + ":" + zeroPad(D.getMinutes()) + ":" + zeroPad(D.getSeconds());
-}
-
-function getAbsTimeDelta(delta_ms) {
-  // Turn input milliseconds into years, days, hours, minutes, seconds (0 values are not printed)
-  // Returns the absolute delta, regardless of negative/positive input.
-  // Example: 1 year, 3 days, 2 hours, 4 minutes, 1 seconds
-  // Example: 3 days, 4 minutes, 
-  // Very inefficient way of calculating year/mon/day/hour/min/second offsets
-  var s_min = 60;
-  var s_hour = s_min*60;
-  var s_day = s_hour*24;
-  var s_year = s_day*365.25;
-
-  // Use absolute delta, even if negative.
-  var s = Math.abs(delta_ms) / 1000; // seconds    
-
-  // TODO : Handle periods between -1 year and 0 seconds ago correctly.
-  var diffY = Math.floor(s / s_year);
-  s -= diffY * s_year;
-
-  var diffD = Math.floor(s / s_day);
-  s -= diffD * s_day;
-
-  var diffH = Math.floor(s / s_hour);
-  s -= diffH * s_hour;
-
-  var diffM = Math.floor(s / s_min);
-  s -= diffM * s_min;
-
-  diffS = s;
-  
-  return [diffY, diffD, diffH, diffM, diffS];
-}
-
-function getPrettyTimeDelta(delta_ms) {
-  var has_passed = delta_ms < 0;
-  var delta = getAbsTimeDelta(delta_ms);
-  
-  parts = []
-  if (delta[0] != 0) {
-    parts.push(delta[0] + ' years');
-    if (has_passed) {
-      // Remove hours/min/sec if > 1 year in the past
-      delta[2] = 0;
-      delta[3] = 0;
-      delta[4] = 0;
-    }
-  }
-  if (delta[1] != 0) {
-    parts.push(delta[1] + ' days');
-    if (has_passed) {
-      // Remove min/sec if > 1 day in the past
-      delta[3] = 0;
-      delta[4] = 0;
-    }
-  }
-  if (delta[2] != 0) {
-    parts.push(delta[2] + ' hours');
-  }
-  if (delta[3] != 0) {
-    parts.push(delta[3] + ' min');
-  }
-  if (delta[4] != 0) {
-    parts.push(delta[4].toFixed(0) + ' seconds');
-  }
-  msg = parts.join(', ');
-  if (has_passed) {
-    msg = 'Passed ' + msg + ' ago';
-  }
-  else {
-    msg += ' left';
-  }
-  return msg;
-}
-
-function getLifeCrises() {
-  // Just build a new table every time
-  var today = new Date(); // Today
-  var bday_val = document.getElementById("bday").value;
-  var bday = new Date(bday_val.replace(/-/g,'/').replace('T',' ')); // Use local timezone
-  var crises_table = document.getElementById("crises");
-  var lifespan = 100.0 * (365.25 * 24 * 60 * 60 * 1000) ; // in ms
-
-  // Clear out previous elements in list
-  while(crises_table.rows.length > 0) {
-    crises_table.deleteRow(0);
-  }
-
-  // Skip generating entries with a NaN birthday date
-  if (isNaN(bday)) {
-    return;
-  }
-
-  // Update list with crises
-  for (var i = 0; i < crises_sorted.length; i++) {
-    var crises_name = crises_sorted[i][0];
-    var crises_percent = crises_sorted[i][1];
-
-    var row = crises_table.insertRow();
-    var cell_name = row.insertCell(0);
-    var cell_date = row.insertCell(1);
-    var due_date = row.insertCell(2);
-    due_date.id = "due"+i; // so updateTimeTillEntries can find these
-
-    var crisis_date = new Date(bday.getTime() + crises_percent*lifespan);
-
-    var ms_till_crisis_date = crisis_date - today;
-
-    cell_name.innerText = crises_name + '-life crisis';
-    cell_date.innerText = humanTime(crisis_date);
-
-    due_date.innerText = getPrettyTimeDelta(ms_till_crisis_date);
-  }
-
-  // Quiet update URL param
-  var bday_val = document.getElementById("bday").value;
-  var bday = new Date(bday_val.replace(/-/g,'/').replace('T',' ')); // Use local timezone
-  // strip seconds from ISO String: '1900-01-23T03:45:00.000Z' -> '1900-01-23T03:45Z'
-  var bday_url_str = bday.toISOString().substr(0,16) + 'Z';
-  history.replaceState('', '', '?dob='+bday_url_str);
-}
-
-function updateTimeTillEntries() {
-  // Update time till timestamps only
-  var today = new Date(); // Today
-  var bday_val = document.getElementById("bday").value;
-  var bday = new Date(bday_val.replace(/-/g,'/').replace('T',' ')); // Use local timezone
-  var lifespan = 100.0 * (365.25 * 24 * 60 * 60 * 1000) ; // in ms
-
-  // Skip generating entries with a NaN birthday date
-  if (isNaN(bday)) {
-    return;
-  }
-
-  for (var i = 0; i < crises_sorted.length; i++) {
-    var due_date = document.getElementById("due"+i);
-
-    // Calculate time delta till date
-    var crises_percent = crises_sorted[i][1];
-    var crisis_date = new Date(bday.getTime() + crises_percent*lifespan);
-    var ms_till_crisis_date = crisis_date - today;
-
-    // Update cell text
-    due_date.innerText = getPrettyTimeDelta(ms_till_crisis_date);
-  }
-}
-
-// Global crises
-var crises_sorted = [];
-function setUpCrises() {
-  var crises = {};
-  // Set up crises dictionary
-  crises['Quarter'] = 0.25;
-  crises['Mid'] = 0.5;
-  crises['Three quarters'] = 0.75;
-
-  crises['Third'] = 1./3;
-  crises['Two thirds'] = 2./3;
-
-  crises['Fifth'] = 1./5;
-  crises['Two fifths'] = 2./5;
-  crises['Three fifths'] = 3./5;
-  crises['Four fifths'] = 4./5;
-
-  crises['Five sixths'] = 5./6;
-
-  crises['Seventh'] = 1./7;
-  crises['Two sevenths'] = 2./7;
-  crises['Three sevenths'] = 3./7;
-  crises['Four sevenths'] = 4./7;
-  crises['Five sevenths'] = 5./7;
-  crises['Six sevenths'] = 6./7;
-
-  // Sort the dictionary by timestamp
-  
-
-  for (var key in crises) crises_sorted.push([key, crises[key]]);
-
-  crises_sorted.sort(function(a, b) {
-      a = a[1];
-      b = b[1];
-
-      return a < b ? -1 : (a > b ? 1 : 0);
-  });
-
-  // Check for URL param
-  checkPassedURLParam();
-
-  // Update life crises values
-  getLifeCrises();
-
-  setInterval(function() {
-    updateTimeTillEntries();
-  }, 1000);
-}
-
-function simpleDateString(_date) {
-  return (_date.getFullYear() + "-" + zeroPad(_date.getMonth()+1) + "-" + 
-    zeroPad(_date.getDate()) + "T" +zeroPad(_date.getHours()) + ":" +
-    zeroPad(_date.getMinutes()) + ":" + zeroPad(_date.getSeconds()));
-}
-
-function checkPassedURLParam() {
-  // Check if URL parameter date of birth was passed, and if so
-  // Set our initial dob to that.
-  if (window.location.search.startsWith('?dob=')) {
-   var dob = new Date(window.location.search.substring(5));
-   console.log(dob)
-
-   if (!isNaN(dob.valueOf())) {
-    // Valid date passed in URL param, update form
-    document.getElementById("bday").value = simpleDateString(dob);
-   }
-  }
-}
-
-
-</script>
-
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.2.0/material.indigo-pink.min.css">
+  <script defer src="https://code.getmdl.io/1.2.0/material.min.js"></script>
+  <script defer src="lifecrises.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
 <body onload="setUpCrises()">
-<div align="center">
-  <h1>Life crises</h1>
+  <div align="center">
+    <h1>Life crises</h1>
     <!-- Input birthday form -->
-  <div>
-    <p>Enter your Birthday here:<br>
-    <input type="datetime-local" id="bday" value="1990-12-25T00:00"
-    onblur="getLifeCrises()" onchange="getLifeCrises()"></p>
-    <!-- onblur for mobile, onchange for desktop, yes, it runs twice -->
-  </div>
-  
-  <div>
-    <!-- Output here -->
-    <p>Crisis dates will update on changes:</p>
-    <table class="mdl-data-table mdl-js-data-table">
-    <thead><tr>
-      <td><b>Life Crisis Event</b></td>
-      <td><b>Date of Event</b></td>
-      <td><b>Time till Event</b></td>
-    </tr></thead>
-    <tbody id='crises'></tbody>
-    </table>
-  </div>
+    <div>
+      <p>Enter your Birthday here:<br>
+        <select name="sex" id="sex" onblur="getLifeCrises()" onchange="getLifeCrises()">
+          <option value="0">Male</option>
+          <option value="1">Female</option>
+        </select>
+        <input type="datetime-local" id="bday" value="1990-12-25T00:00" onblur="getLifeCrises()"
+          onchange="getLifeCrises()">
+      </p>
+      <!-- onblur for mobile, onchange for desktop, yes, it runs twice -->
+    </div>
 
-  <div>
-    <p><a href="../">Home</a> - <a href="https://github.com/Elucidation/life_crises">Github</a></p>
+    <div>
+      <p><span>Expected life span: <age id="lifespan"></age></span></p>
+      <table class="mdl-data-table mdl-js-data-table">
+        <thead>
+          <tr>
+            <td><b>Life Crisis Event</b></td>
+            <td><b>Date of Event</b></td>
+            <td><b>Time till Event</b></td>
+          </tr>
+        </thead>
+        <tbody id='crises'></tbody>
+      </table>
+    </div>
+
+    <div>
+      <p><a href="../">Home</a> - <a href="https://github.com/Elucidation/life_crises">Github</a></p>
+    </div>
   </div>
-</div>
 
 
 </body>
+
 </html>
