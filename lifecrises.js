@@ -136,7 +136,7 @@ function getLifeCrises() {
 
         var ms_till_crisis_date = crisis_date - today;
 
-        cell_name.innerText = crises_name + '-life crisis';
+        cell_name.innerText = crises_name + ' life crisis';
         cell_date.innerText = humanTime(crisis_date);
 
         due_date.innerText = getPrettyTimeDelta(ms_till_crisis_date);
