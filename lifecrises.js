@@ -96,7 +96,8 @@ function getLifeCrises() {
     var age_years = age_ms / (365.25 * 24 * 60 * 60 * 1000);
     var age = getAbsTimeDelta(age_ms); // [years, months, days, ...]
     var crises_table = document.getElementById("crises");
-    var sex_id = parseInt(document.getElementById("sex").value);
+    var sex_sel = document.getElementById("sex");
+    var sex_id = parseInt(sex_sel.value);
 
     var life_expectency_ms = life_expectency[age[0]][sex_id] * (365.25 * 24 * 60 * 60 * 1000);
 
@@ -108,7 +109,7 @@ function getLifeCrises() {
 
     // var lifespan_ms = lifespan_years * (365.25 * 24 * 60 * 60 * 1000); // in ms
     var lifespan_element = document.getElementById("lifespan")
-    lifespan_element.textContent = `${lifespan_years.toFixed(1)} years (life expectancy ${life_expectency[age[0]][sex_id]} + age ${age_years.toFixed(2)})`;
+    lifespan_element.textContent = `${age_years.toFixed(0)} year old ${sex_sel.options[sex_sel.selectedIndex].text}: ~${lifespan_years.toFixed(1)} years`;
 
     // Clear out previous elements in list
     while (crises_table.rows.length > 0) {
