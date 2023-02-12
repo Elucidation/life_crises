@@ -102,7 +102,7 @@ function getLifeCrises() {
 
     var lifespan_ms = age_ms + life_expectency_ms;
 
-    var lifespan_years = lifespan_ms / (365.25 * 24 * 60 * 60 * 1000);
+    lifespan_years = lifespan_ms / (365.25 * 24 * 60 * 60 * 1000);
 
     
 
@@ -199,6 +199,9 @@ function setUpCrises() {
     crises['Four sevenths'] = 4. / 7;
     crises['Five sevenths'] = 5. / 7;
     crises['Six sevenths'] = 6. / 7;
+    
+    crises['First'] = 0.;
+    crises['Final'] = 1.;
 
     // Sort the dictionary by timestamp
 
