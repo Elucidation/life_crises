@@ -182,24 +182,24 @@ function setUpCrises() {
     // Set up crises dictionary
     crises['Quarter'] = 0.25;
     crises['Mid'] = 0.5;
-    crises['Three quarters'] = 0.75;
+    crises['³⁄₄'] = 0.75;
 
-    crises['Third'] = 1. / 3;
-    crises['Two thirds'] = 2. / 3;
+    crises['¹⁄₃'] = 1. / 3;
+    crises['²⁄₃'] = 2. / 3;
 
-    crises['Fifth'] = 1. / 5;
-    crises['Two fifths'] = 2. / 5;
-    crises['Three fifths'] = 3. / 5;
-    crises['Four fifths'] = 4. / 5;
+    crises['¹⁄₅'] = 1. / 5;
+    crises['²⁄₅'] = 2. / 5;
+    crises['³⁄₅'] = 3. / 5;
+    crises['⁴⁄₅'] = 4. / 5;
 
-    crises['Five sixths'] = 5. / 6;
+    crises['⁵⁄₆'] = 5. / 6;
 
-    crises['Seventh'] = 1. / 7;
-    crises['Two sevenths'] = 2. / 7;
-    crises['Three sevenths'] = 3. / 7;
-    crises['Four sevenths'] = 4. / 7;
-    crises['Five sevenths'] = 5. / 7;
-    crises['Six sevenths'] = 6. / 7;
+    crises['¹⁄₇'] = 1. / 7;
+    crises['²⁄₇'] = 2. / 7;
+    crises['³⁄₇'] = 3. / 7;
+    crises['⁴⁄₇'] = 4. / 7;
+    crises['⁵⁄₇'] = 5. / 7;
+    crises['⁶⁄₇'] = 6. / 7;
 
     crises['First'] = 0.;
     crises['Final'] = 1.;
